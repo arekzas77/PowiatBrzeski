@@ -1,10 +1,11 @@
 const map = L.map('map',{
   zoomSnap: 0.5,	
   maxZoom:19,
+	minZoom:10,
 	zoomSnap:1,
   zoomControl:false});
 
-map.setView([50, 20.57], 11);
+map.setView([50, 20.57], 10);
 
 //Extend ZoomBar - Adbutton "Start map"
 L.Control.MyZoomBar = L.Control.Zoom.extend({
@@ -22,13 +23,15 @@ L.Control.MyZoomBar = L.Control.Zoom.extend({
 	_zoomToStart: function(e) {
         L.DomEvent.stopPropagation(e);
         L.DomEvent.preventDefault(e);
-        map.setView([49.90, 20.57], 11);
+        map.setView([50, 20.57], 10);
     }
 });
 	
 map.addControl(new L.Control.MyZoomBar());
 L.control.measure().addTo(map);//pomiar odleglosci powierzchni
 L.control.scale({imperial:false}).addTo(map);
+
+const powiat=L.tileLayer('tiles/powiat/{z}/{x}/{y}.png',{maxNativeZoom:11,maxZoom:12,minZoom:10,transparent:true}).addTo(map);
 
 const googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
 	maxZoom: 20,
@@ -52,8 +55,12 @@ const baseMaps = {
  	'OpenStreet': openStreet,
  	'Brak': beztla};
 
+	 const overlayMap={
+		"<img src='css/images/pow_legend.png' align=top style='margin:4px 4px 2px 0px'>Powiaty":powiat
+	}
 
-const layerControl = L.control.layers(baseMaps).addTo(map);
+
+const layerControl = L.control.layers(baseMaps,overlayMap).addTo(map);
 map.on("zoom",()=>{let currentzoom = map.getZoom();
 	console.log(currentzoom)});
 
