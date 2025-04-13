@@ -1,6 +1,6 @@
 const map = L.map('map',{
   zoomSnap: 0.5,	
-  maxZoom:19,
+  maxZoom:16,
 	minZoom:10,
 	zoomSnap:1,
   zoomControl:false});
@@ -31,7 +31,10 @@ map.addControl(new L.Control.MyZoomBar());
 L.control.measure().addTo(map);//pomiar odleglosci powierzchni
 L.control.scale({imperial:false}).addTo(map);
 
+const obreby=L.tileLayer('tiles/obreby/{z}/{x}/{y}.png',{maxNativeZoom:14,maxZoom:16,minZoom:13,transparent:true}).addTo(map);
+const jednostkiEwidencyjne=L.tileLayer('tiles/JE/{z}/{x}/{y}.png',{maxNativeZoom:13,maxZoom:14,minZoom:11,transparent:true}).addTo(map);
 const powiat=L.tileLayer('tiles/powiat/{z}/{x}/{y}.png',{maxNativeZoom:11,maxZoom:12,minZoom:10,transparent:true}).addTo(map);
+
 
 const googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
 	maxZoom: 20,
@@ -56,6 +59,8 @@ const baseMaps = {
  	'Brak': beztla};
 
 	 const overlayMap={
+		"<img src='css/images/obreby_legend.png' align=top style='margin:4px 4px 2px 0px'>Obręby":obreby,
+		"<img src='css/images/je_legend.png' align=top style='margin:4px 4px 2px 0px'>Jednostki ewidencyjne":jednostkiEwidencyjne,
 		"<img src='css/images/pow_legend.png' align=top style='margin:4px 4px 2px 0px'>Powiaty":powiat
 	}
 
