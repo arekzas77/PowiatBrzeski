@@ -5,7 +5,7 @@ const map = L.map('map',{
 	zoomSnap:1,
   zoomControl:false});
 
-map.setView([50, 20.57], 10);
+map.setView([50, 20.65], 10);
 
 //Extend ZoomBar - Adbutton "Start map"
 L.Control.MyZoomBar = L.Control.Zoom.extend({
