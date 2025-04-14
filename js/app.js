@@ -69,6 +69,54 @@ const layerControl = L.control.layers(baseMaps,overlayMap).addTo(map);
 map.on("zoom",()=>{let currentzoom = map.getZoom();
 	console.log(currentzoom)});
 
+getCommunities();
+let layerGeojson;
+//Search HTML
+
+const formEl=document.querySelector('.js-search');
+const searchBtnEl=document.querySelector('.js-search-btn');
+const selectCommunityEl=document.querySelector('#js-community');
+selectCommunityEl.addEventListener('change',getDistrictsCadastral);
+searchBtnEl.addEventListener('click',()=>{(layerGeojson)?layerGeojson.remove():null;toggleContainer(formEl)});
+
+function toggleContainer(container){
+	container.classList.toggle("show")
+}
+
+async function getCommunities(){
+	const selectCommunityEl= document.querySelector('#js-community');
+	const selectDistrictCadastralEl= document.querySelector('#js-district-cadastral');
+	selectDistrictCadastralEl.innerHTML='<option value="initial">Wybierz obręb</option>';
+	selectDistrictCadastralEl.disabled=true;
+	const url='GeoJson/JE_centroidy.geojson'
+	const response=await fetch(url);	
+	const jsonres=await response.json();
+	const communityArr= jsonres.features.map((item)=>item.properties).sort((a,b)=>a.JPT_NAZWA_>b.JPT_NAZWA_);
+	let communityOptionsHtml='<option value="initial">Wybierz JE</option>';
+	const selectedCommunityEl=document.querySelector('#js-community').value;
+	for(const item of communityArr){
+		communityOptionsHtml+=`<option value="${item.JPT_KOD_JE}">${item.JPT_NAZWA_}</option>`;
+	}
+	selectCommunityEl.innerHTML=communityOptionsHtml;
+	selectCommunityEl==='initial'?selectCommunityEl.disabled=true:selectCommunityEl.removeAttribute('disabled');
+}
+
+async function getDistrictsCadastral(){
+	const url='GeoJson/obreby_centroidy.geojson'
+	const response= await fetch(url);
+	const jsonres=await response.json();
+	const districtCadastralArr= jsonres.features.map((item)=>item.properties).sort((a,b)=>a.JPT_NAZWA_>b.JPT_NAZWA_);
+	let districtsCadastralOptionsHtml='<option value="initial">Wybierz obręb</option>';
+	const selectDistrictCadastralEl= document.querySelector('#js-district-cadastral');
+	const selectedCommunityEl=document.querySelector('#js-community').value;
+		for(const item of districtCadastralArr){
+		item.KOD_JE==selectedCommunityEl?districtsCadastralOptionsHtml+=`<option value="${item.JPT_KOD_JE}">${item.JPT_NAZWA_}</option>`:null;
+	}
+	selectDistrictCadastralEl.innerHTML=districtsCadastralOptionsHtml;
+	selectedCommunityEl==='initial'?selectDistrictCadastralEl.disabled=true:selectDistrictCadastralEl.removeAttribute('disabled');
+}	
+
+
 //support for coordinate systems
 map.on("mousemove", function (e) {
 	const markerPlaceWGS84 = document.querySelector(".wgs84");

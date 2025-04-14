@@ -1,0 +1,16 @@
+{
+"type": "FeatureCollection",
+"name": "JE_centroidy",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "JPT_KOD_JE": "120203_4", "JPT_NAZWA_": "m. Czchów" }, "geometry": { "type": "Point", "coordinates": [ 20.654828, 49.827901 ] } },
+{ "type": "Feature", "properties": { "JPT_KOD_JE": "120204_2", "JPT_NAZWA_": "Dębno" }, "geometry": { "type": "Point", "coordinates": [ 20.717437, 49.944604 ] } },
+{ "type": "Feature", "properties": { "JPT_KOD_JE": "120206_2", "JPT_NAZWA_": "Iwkowa" }, "geometry": { "type": "Point", "coordinates": [ 20.568352, 49.800264 ] } },
+{ "type": "Feature", "properties": { "JPT_KOD_JE": "120205_2", "JPT_NAZWA_": "Gnojnik" }, "geometry": { "type": "Point", "coordinates": [ 20.626457, 49.891128 ] } },
+{ "type": "Feature", "properties": { "JPT_KOD_JE": "120202_4", "JPT_NAZWA_": "m. Brzesko" }, "geometry": { "type": "Point", "coordinates": [ 20.606509, 49.974598 ] } },
+{ "type": "Feature", "properties": { "JPT_KOD_JE": "120202_5", "JPT_NAZWA_": "Brzesko" }, "geometry": { "type": "Point", "coordinates": [ 20.648758, 49.9827 ] } },
+{ "type": "Feature", "properties": { "JPT_KOD_JE": "120201_2", "JPT_NAZWA_": "Borzęcin" }, "geometry": { "type": "Point", "coordinates": [ 20.712305, 50.065728 ] } },
+{ "type": "Feature", "properties": { "JPT_KOD_JE": "120207_2", "JPT_NAZWA_": "Szczurowa" }, "geometry": { "type": "Point", "coordinates": [ 20.600013, 50.121843 ] } },
+{ "type": "Feature", "properties": { "JPT_KOD_JE": "120203_5", "JPT_NAZWA_": "Czchów" }, "geometry": { "type": "Point", "coordinates": [ 20.643067, 49.807135 ] } }
+]
+}

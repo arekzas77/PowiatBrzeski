@@ -111,7 +111,7 @@ button:active{
 	margin:0
 
 }
-.voivodeship-container, .district-container, .community-container{
+.community-container, .district-cadastral-container{
 	display:flex;
 	justify-content: space-between;
 	padding: 4px;

@@ -12,6 +12,26 @@
 <body>
   <div id="map">
     <header>POWIAT BRZESKI<a href="https://eteryt.stat.gov.pl/eTeryt/rejestr_teryt/aktualnosci/aktualnosci.aspx" target="blank" title="Rejestr TERYT"><img src="css/images/Poland.png"></a></header>
+    <div class="search-container">
+      <button class="search-btn js-search-btn"><span style="writing-Mode: vertical-rl">SZUKAJ</span></button>
+      <form class="search js-search" id="js-search">
+        <p class="title">Wyszukaj granice:</p>
+        <div class="community-container">
+          <label for="community">Jednostka:</label>
+          <select name="community" disabled id="js-community">
+            <option value="initial">Wybierz jednostkę</option>
+          </select>
+          <button class='js-community-btn'>Zbliż do</button>
+        </div>
+        <div class="district-cadastral-container">
+          <label for="districtCadastral">Obręb:</label>
+          <select name="districtCadastral" disabled id="js-district-cadastral">
+            <option value="initial">Wybierz obręb</option>
+          </select>
+          <button class='js-district-cadastral-btn'>Zbliż do</button>
+        </div>
+      </form>
+    </div>
     <div class="info-marker-position js-info-marker-position"></div>
     <div class="marker-position js-marker-position">
       <div class="wgs84"><span style="font-weight:700">WGS 84	</span><span style="font-weight:700">X: </span>49.518626<span style="font-weight:700"> Y: </span>23.238273</div>
