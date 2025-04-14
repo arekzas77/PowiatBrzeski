@@ -70,7 +70,7 @@ map.on("zoom",()=>{let currentzoom = map.getZoom();
 	console.log(currentzoom)});
 
 getCommunities();
-let layerGeojson;
+
 //Search HTML
 
 const formEl=document.querySelector('.js-search');
@@ -115,6 +115,47 @@ async function getDistrictsCadastral(){
 	selectDistrictCadastralEl.innerHTML=districtsCadastralOptionsHtml;
 	selectedCommunityEl==='initial'?selectDistrictCadastralEl.disabled=true:selectDistrictCadastralEl.removeAttribute('disabled');
 }	
+
+//get geometries communities for markers
+let layerGeojson;
+const btnCommunityEl=document.querySelector('.js-community-btn');
+btnCommunityEl.addEventListener('click', ()=>{event.preventDefault();getGeometryCommunity()});
+async function getGeometryCommunity(){
+	(layerGeojson)?layerGeojson.remove():null;
+	let selectedGeometry;
+	const selectedDistrictEl=document.querySelector('#js-community').value;
+	const res=await fetch('GeoJson/JE_centroidy.geojson');
+	const resJson=await res.json();
+	for(const element of resJson.features){
+		if(element.properties.JPT_KOD_JE==selectedDistrictEl){
+			selectedGeometry=element;
+			break;
+			}
+		}
+		layerGeojson=L.geoJson(selectedGeometry).bindPopup(`<b>Gmina:</b> ${selectedGeometry.properties.JPT_NAZWA_}`).addTo(map);
+		map.setView(layerGeojson.getBounds().getCenter(),12);
+		console.log(layerGeojson);
+		
+};
+
+const btnDistrictCadastralEl=document.querySelector('.js-district-cadastral-btn');
+btnDistrictCadastralEl.addEventListener('click', ()=>{event.preventDefault();getGeometryDistrictCadastral()});
+async function getGeometryDistrictCadastral(){
+	(layerGeojson)?layerGeojson.remove():null;
+	let selectedGeometry;
+	const selectedDistrictCadastralEl=document.querySelector('#js-district-cadastral').value;
+	const res=await fetch('GeoJson/obreby_centroidy.geojson');
+	const resJson=await res.json();
+	for(const element of resJson.features){
+		if(element.properties.JPT_KOD_JE==selectedDistrictCadastralEl){
+			selectedGeometry=element;
+			break;
+			}
+		}
+		layerGeojson=L.geoJson(selectedGeometry).bindPopup(`<b>Obręb:</b> ${selectedGeometry.properties.JPT_NAZWA_}`).addTo(map);
+		map.setView(layerGeojson.getBounds().getCenter(),14);
+		console.log(layerGeojson);
+};
 
 
 //support for coordinate systems
