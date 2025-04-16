@@ -77,7 +77,6 @@ async function renderObrebyGeoJson() {
   const response = await fetch(url);
   const obreby = await response.json();
 	obreby.features.forEach((feature)=>{feature.properties['TERYT_OBREB']=`${feature.properties.JPT_KOD_JE} ${feature.properties.JPT_NAZWA_}`});
-	console.log(obreby);
 	
   const layerGeojsonObreby=L.geoJson(obreby,{
 		onEachFeature: function(feature,layer){
@@ -93,8 +92,9 @@ renderObrebyGeoJson();
 
 //hover gmina => attributes in div
 function addTextToDiv(text) {
+	const mediaQuery = window.matchMedia('(min-width: 720px)')
   const markerPlace = document.querySelector(".info-marker-position");
-	if(map.getZoom()>10){markerPlace.style.display='block';
+	if(map.getZoom()>10 && mediaQuery.matches){markerPlace.style.display='block';
   markerPlace.innerHTML = text;}
 	else{markerPlace.style.display='none'}
 }
