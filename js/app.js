@@ -28,7 +28,7 @@ L.Control.MyZoomBar = L.Control.Zoom.extend({
 });
 	
 map.addControl(new L.Control.MyZoomBar());
-L.control.measure().addTo(map);//pomiar odleglosci powierzchni
+L.control.measure().addTo(map);  //pomiar odleglosci powierzchni
 L.control.scale({imperial:false}).addTo(map);
 
 const obreby=L.tileLayer('tiles/obreby/{z}/{x}/{y}.png',{maxNativeZoom:14,maxZoom:16,minZoom:13,transparent:true}).addTo(map);
@@ -37,20 +37,20 @@ const powiat=L.tileLayer('tiles/powiat/{z}/{x}/{y}.png',{maxNativeZoom:11,maxZoo
 
 
 const googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
-	maxZoom: 20,
+	maxZoom: 18,
 	subdomains:['mt0','mt1','mt2','mt3'],
 	attribution: '&copy; <a href="https://www.google.com/intl/pl_pl/help/terms_maps/">Dane mapy Google 2024</a>'
 	});			
 const googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
-	maxZoom: 22,
+	maxZoom: 18,
 	subdomains:['mt0','mt1','mt2','mt3'],
 	attribution: '&copy; <a href="https://www.google.com/intl/pl_pl/help/terms_maps/">Dane mapy Google 2024</a>'
 	});
 const openStreet=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	maxZoom: 20,
+	maxZoom: 18,
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
-const beztla = L.tileLayer('',{maxZoom: 20});
+const beztla = L.tileLayer('',{maxZoom: 18});
 
 const baseMaps = {
 	'Google zdjęcia':googleHybrid,
@@ -76,7 +76,7 @@ async function renderObrebyGeoJson() {
   const url = 'GeoJson/obreby_labels.geojson';
   const response = await fetch(url);
   const obreby = await response.json();
-	obreby.features.forEach((feature)=>{feature.properties['TERYT_GMINA']=`${feature.properties.JPT_KOD_JE} ${feature.properties.JPT_NAZWA_}; ${feature.properties.RODZAJ}`});
+	obreby.features.forEach((feature)=>{feature.properties['TERYT_OBREB']=`${feature.properties.JPT_KOD_JE} ${feature.properties.JPT_NAZWA_}`});
 	console.log(obreby);
 	
   const layerGeojsonObreby=L.geoJson(obreby,{
@@ -87,14 +87,14 @@ async function renderObrebyGeoJson() {
 		},	
 		style: {color:"transparent",opacity:0}
 	}).addTo(map);
-	//putGminyToControlSearch(layerGeojsonGminy)
+	putObrebyToControlSearch(layerGeojsonObreby)
 } 
 renderObrebyGeoJson();
 
 //hover gmina => attributes in div
 function addTextToDiv(text) {
   const markerPlace = document.querySelector(".info-marker-position");
-	if(map.getZoom()>9){markerPlace.style.display='block';
+	if(map.getZoom()>10){markerPlace.style.display='block';
   markerPlace.innerHTML = text;}
 	else{markerPlace.style.display='none'}
 }
@@ -105,13 +105,13 @@ async function renderJednostkiGeoJson() {
   const url = 'GeoJson/JE_labels.geojson';
   const response = await fetch(url);
   const gminy = await response.json();
-	gminy.features.forEach((feature)=>{feature.properties['TERYT_GMINA']=`${feature.properties.JPT_KOD_JE} ${feature.properties.JPT_NAZWA_}; ${feature.properties.RODZAJ}`})
+	gminy.features.forEach((feature)=>{feature.properties['TERYT_GMINA']=`${feature.properties.JPT_KOD_JE} ${feature.properties.JPT_NAZWA_}`})
 	
   const layerGeojsonGminy=L.geoJson(gminy,{
 		onEachFeature: function(feature,layerGminy){
-			layerGminy.on("mouseover",()=>addTextToDiv(`<b>TERYT: </b>${feature.properties.JPT_KOD_JE}<br><b>Jednostka: <span style='color:red'>${feature.properties.JPT_NAZWA_}</b></span><br><b>Ilość obrębów: </b>${feature.properties.Ilosc_obr}`))
+			layerGminy.on("mouseover",()=>addTextToDiv(`<b>TERYT: </b>${feature.properties.JPT_KOD_JE}<br><b>Jednostka: <span style='color:red'>${feature.properties.JPT_NAZWA_}</b></span><br><b>Ilość obrębów: </b>${feature.properties.Ilosc_obr}<br><b>WYSYŁKA:<span style='color:red'>${feature.properties.Termin}</span></b>`))
 			layerGminy.on("mouseout",()=>{const markerPlace = document.querySelector(".info-marker-position"); markerPlace.style.display='none'})
-			layerGminy.bindPopup(`<b>TERYT: </b>${feature.properties.JPT_KOD_JE}<br><b>Jednostka: <span style='color:red'>${feature.properties.JPT_NAZWA_}</b></span><br><b>Ilość obrębów: </b>${feature.properties.Ilosc_obr}`)
+			layerGminy.bindPopup(`<b>TERYT: </b>${feature.properties.JPT_KOD_JE}<br><b>Jednostka: <span style='color:red'>${feature.properties.JPT_NAZWA_}</b></span><br><b>Ilość obrębów: </b>${feature.properties.Ilosc_obr}<br><b>WYSYŁKA: <span style='color:red'>${feature.properties.Termin}</span></b>`)
 		},	
 		style: {color:"transparent",opacity:0}
 	}).addTo(map);
@@ -234,6 +234,29 @@ map.on("mousemove", function (e) {
 	}
 	markerPlaceWGS84.innerHTML = '<span style="font-weight:700">WGS 84	</span>' + '<span style="font-weight:700">X: </span>' + x.toFixed(6) + '<span style="font-weight:700"> Y: </span>' + y.toFixed(6)})
 
+
+//Control Search for obręby
+const initialObreb={
+	"type": "FeatureCollection",
+	"name": "obreby",
+	"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+	"features": [
+{ "type": "Feature", "properties": { "JPT_NAZWA_": "Wyszukaj obręb..." }, "geometry": { "type": "Point", "coordinates": [ 20.65, 50 ] } },
+	]
+};
+const testObreb= new L.geoJson(initialObreb);
+
+function putObrebyToControlSearch(layer){
+	const controlSearch= new L.Control.Search({
+		layer: layer,
+		collapsed: false,
+		initial: false,
+		hideMarkerOnCollapse: true,
+		container:"js-search",
+		textPlaceholder: "Wyszukaj obreb",
+		propertyName: 'TERYT_OBREB'});
+	map.addControl(controlSearch);
+}
 
 
 				
