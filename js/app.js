@@ -117,15 +117,15 @@ async function renderJednostkiGeoJson() {
 			return 'orange'}	
 	}
 	
-	checkStatus();
+	
   const layerGeojsonGminy=L.geoJson(gminy,{
 		onEachFeature: function(feature,layerGminy){
 			layerGminy.on("mouseover",()=>addTextToDiv(`<b>TERYT: </b>${feature.properties.JPT_KOD_JE}<br><b>Jednostka: <span style='color:red'>${feature.properties.JPT_NAZWA_}</b></span><br><b>Ilość obrębów: </b>${feature.properties.Ilosc_obr}<br><b>WYSYŁKA:<span style='color:red'>${feature.properties.Termin}</span></b><br><b>STATUS: <span style='color:${checkStatus(feature.properties.STATUS)}'>${feature.properties.STATUS}</span></b>`))
 			layerGminy.on("mouseout",()=>{const markerPlace = document.querySelector(".info-marker-position"); markerPlace.style.display='none'})
 			layerGminy.bindPopup(`<b>TERYT: </b>${feature.properties.JPT_KOD_JE}<br><b>Jednostka: <span style='color:red'>${feature.properties.JPT_NAZWA_}</b></span><br><b>Ilość obrębów: </b>${feature.properties.Ilosc_obr}<br><b>WYSYŁKA: <span style='color:red'>${feature.properties.Termin}</span></b><br><b>STATUS: <span style='color:${checkStatus(feature.properties.STATUS)}'>${feature.properties.STATUS}</span></b>`)
 		},	
-		style: {color:"transparent",opacity:0}
-	}).addTo(map);
+		style: {color:'transparent', opacity: 0}
+}).addTo(map);
 	//putGminyToControlSearch(layerGeojsonGminy)
 } 
 renderJednostkiGeoJson();
